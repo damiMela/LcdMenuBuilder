@@ -19,10 +19,10 @@ public:
 	void Render();
 	void Input(MenuNav::MenuNavInput_e input) override;
 	void Input(char input) override{ buffer+=input; };
+	std::string buffer;
 
 private:
 	bool firstPrint = true;
-	std::string buffer;
 
 };
 
