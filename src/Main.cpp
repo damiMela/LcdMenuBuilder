@@ -17,7 +17,6 @@
 
 #include "MenuSystem.h"
 #include "MenuExceptions.h"
-#include "MenuConfig.h"
 
 //#define PRINT_KEY
 
@@ -102,7 +101,8 @@ int main() {
 		auto radioListItem = new RadioList("other radio list", testRadioListHandler, {"option A", "option B", "option C"});
 
 		//---------------------- example -------------------//
-		MenuConfig config(print);
+
+		MenuSystem::SetPrintCallback(print);
 		MenuSystem m( {
 			new MenuItem("Void item"),
 			new SubMenu("Sub Menu", {

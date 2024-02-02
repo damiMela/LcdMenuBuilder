@@ -29,7 +29,7 @@ public:
 		printLineCall(line, text);
 	}
 
-	MenuConfig(std::function<void(uint8_t, std::string)> pirntMethod){
+	static void SetPrintCallback(std::function<void(uint8_t, std::string)> pirntMethod){
 		printLineCall = pirntMethod;
 	}
 

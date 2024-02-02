@@ -21,6 +21,10 @@ public:
 	void Input(MenuNav::MenuNavInput_e input) override;
 	void Input(char input) override;
 
+	static void SetPrintCallback(std::function<void(uint8_t, std::string)> pirntMethod){
+		MenuConfig::SetPrintCallback(pirntMethod);
+	}
+
 private:
 	static bool started;
 	uint8_t currMenuId = 0;
