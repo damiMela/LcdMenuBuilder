@@ -5,7 +5,7 @@
  *      Author: damimela
  */
 
-#include "MenuItem.h"
+#include <MenuItem.h>
 
 uint8_t MenuItem::globalItemCounter  = 2;
 NavStack MenuItem::navStack;

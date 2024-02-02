@@ -5,22 +5,21 @@
  *      Author: damimela
  */
 
-#include "TextInputItem.h"
+#include <MenuWidgets/TextInputItem.h>
 
-TextInputItem::TextInputItem(std::string title, std::function<void(void*, size_t)> callback):
-	MenuItem(title){
-	this->SetCallback(callback);
+TextInputItem::TextInputItem(const std::string title, std::string& output):
+	MenuItem(title), bufferRef(output){
 }
 
-TextInputItem::TextInputItem(std::string title, std::function<void(void*, size_t)> callback,
-		void* funcArgs, size_t funcArgsLen): MenuItem(title){
-	this->SetCallback(callback);
-	args = funcArgs;
-	argsLen = funcArgsLen;
+TextInputItem::TextInputItem(const std::string title, std::function<void(TextInputItem*)> callback):
+	MenuItem(title), bufferRef(buffer){
+	this->SetCallback([callback](MenuItem* item) {
+        callback(static_cast<TextInputItem*>(item));
+    });
 }
+
 
 TextInputItem::~TextInputItem() {
-	buffer.clear();
 }
 
 
@@ -28,7 +27,6 @@ void TextInputItem::Input(MenuNav::MenuNavInput_e input){
 	switch(input){
 	case MenuNav::CANCEL_KEY:
 		navStack.back()->Cancel();
-		buffer.clear();
 		firstPrint = true;
 		break;
 	case MenuNav::BACKSPACE_KEY:
@@ -36,7 +34,8 @@ void TextInputItem::Input(MenuNav::MenuNavInput_e input){
 			buffer.pop_back();
 		break;
 	case MenuNav::ENTER_KEY:
-		this->Execute();
+		if(&bufferRef != &buffer)	bufferRef = buffer;
+		if(this->callback) 			this->Execute();
 	}
 };
 

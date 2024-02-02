@@ -30,15 +30,10 @@ typedef std::list<MenuItem*> NavStack;
 
 class MenuItem {
 public:
-	MenuItem(std::string title);
-	MenuItem(std::string title, void* args, size_t argsLen);
-	void SetCallback(std::function<void(void*, size_t)> callback){ _callback=callback;};
-	std::string GetTitle() { return title;	}
-	menuId GetId(){return id;}
-	static uint8_t NavStackSize() {return navStack.size();}
+	MenuItem(const std::string title);
 
 	virtual ~MenuItem();
-	virtual void Execute() {	_callback(args, argsLen);	}
+	virtual void Execute() {	callback(this);	}
 	virtual void Cancel(){ navStack.pop_back();}
 	virtual void Input(char input){};
 	virtual void Render(){
@@ -48,10 +43,15 @@ public:
 		if(input==MenuNav::CANCEL_KEY) navStack.back()->Cancel();
 	}
 
+	menuId GetId(){return id;}
+	std::string GetTitle() { return title;	}
+	static uint8_t NavStackSize() {return navStack.size();}
+	void SetCallback(std::function<void(MenuItem*)> callback){ this->callback=callback;};
+
 protected:
 	std::string title;
 	menuId id;
-	std::function<void(void*, size_t)>  _callback;
+	std::function<void(MenuItem*)>  callback;
 	void* args = nullptr;
 	size_t argsLen = 0;
 

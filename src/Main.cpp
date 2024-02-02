@@ -10,13 +10,14 @@
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <MenuWidgets/CheckBoxList.h>
+#include <MenuWidgets/RadioList.h>
+#include <MenuWidgets/TextInputItem.h>
 #include <array>
 
 #include "MenuSystem.h"
 #include "MenuExceptions.h"
 #include "MenuConfig.h"
-#include "TextInputItem.h"
-#include "CheckBoxItem.h"
 
 //#define PRINT_KEY
 
@@ -64,17 +65,13 @@ bool captureKeys(MenuSystem& menu){
 
 /////////////////////////////////////////////////
 
-struct test_st{
-	uint8_t test_val;
-	std::string test_string;
-};
+void testTextHandler(TextInputItem* input){
+	std::cout << input->GetCurrentText() << std::endl;
+	sleep(1);
+}
 
-void testHandler(void* args, size_t len){
-	if(len > 0){
-		test_st * _args = (test_st*)args;
-		std::cout << "value:" << _args->test_string
-				<< " ----- n:" << (int)_args->test_val<<std::endl; sleep(1);
-	}
+void testRadioListHandler(RadioList* input){
+
 }
 
 ////////////////////////////////////////////////
@@ -92,15 +89,17 @@ int main() {
 	tcsetattr(STDOUT_FILENO, TCSANOW, &newTermios);
 
 	try {
-		//////// for Text input item
-		test_st test;
-		test.test_val = 0;
-		test.test_string = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. "
-				"Aenean commodo ligula eget dolor. Aenean massa. "
-				"Cum sociis natoque penatibus et magnis dis";
+		///////// for textInput
+		std::string buffer;
 
 		///////// for Chek Items
-		bool options[3] = {false};
+		std::vector<bool> checkListReuslt(3);
+
+		///////// for radio list
+		uint8_t selectedId = 0;
+
+		///////// same item, multiple access points
+		auto radioListItem = new RadioList("other radio list", testRadioListHandler, {"option A", "option B", "option C"});
 
 		//---------------------- example -------------------//
 		MenuConfig config(print);
@@ -110,18 +109,17 @@ int main() {
 					new MenuItem("void item 2"),
 					new SubMenu("Sub-SubMenu", {new MenuItem("void item 3")})
 				}),
-			new TextInputItem("Text input", testHandler, (void*)&test, sizeof(test_st)),
-			new CheckBoxItem("check box", {
-					{options, "option 1"},
-					{options+1,"option 2"},
-					{options+2,"option 3"}
-				})
+			new TextInputItem("Text input (handler)", testTextHandler),
+			new TextInputItem("Text input (shared)", buffer),
+			new CheckBoxList("check box", checkListReuslt, { "option 1","option 2","option 3" }),
+			new RadioList("radio list", selectedId, {"option 1", "option 2", "option 3"}),
+			new SubMenu("double access A", {radioListItem}),
+			new SubMenu("double access B", {radioListItem})
 		});
 
 		m.Start();
 		while(!captureKeys(m)){
 			usleep(10000);
-			test.test_val++;
 		}
 	} catch (MenuException &e) {
 		std::cout << e.what() << std::endl;

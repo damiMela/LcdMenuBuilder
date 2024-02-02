@@ -14,7 +14,7 @@
 
 class SubMenu : public MenuItem{
 public:
-	SubMenu(std::string title, std::initializer_list<MenuItem*> list,
+	SubMenu(const std::string title, std::initializer_list<MenuItem*> list,
 			bool freeItemsOnDestroy = true);
 	virtual ~SubMenu();
 

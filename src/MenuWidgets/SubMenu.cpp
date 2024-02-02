@@ -5,10 +5,10 @@
  *      Author: damimela
  */
 
-#include "SubMenu.h"
+#include <MenuWidgets/SubMenu.h>
 #include "MenuConfig.h"
 
-SubMenu::SubMenu(std::string title, std::initializer_list<MenuItem*> list,
+SubMenu::SubMenu(const std::string title, std::initializer_list<MenuItem*> list,
 		bool freeItemsOnDestroy) :
 	MenuItem(title),
 	items(list),
@@ -32,7 +32,7 @@ void SubMenu::Render(void){
 	if(currSelection >= printStartPoint+MenuConfig::heigth)
 		printStartPoint++;
 
-	if(printStartPoint+MenuConfig::heigth> items.size()-1)
+	if(printStartPoint+MenuConfig::heigth > (int)items.size()-1)
 		printStartPoint = items.size()-MenuConfig::heigth;
 
 	if(currSelection < printStartPoint)

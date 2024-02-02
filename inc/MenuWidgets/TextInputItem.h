@@ -12,16 +12,21 @@
 
 class TextInputItem : public MenuItem{
 public:
-	TextInputItem(std::string title, std::function<void(void*, size_t)> callback);
-	TextInputItem(std::string title, std::function<void(void*, size_t)> callback, void* funcArgs, size_t funcArgsLen);
+	TextInputItem(const std::string title, std::string& buffer);
+	TextInputItem(const std::string title, std::function<void(TextInputItem*)> callback);
 	virtual ~TextInputItem();
 
-	void Render();
+	void Render() override;
 	void Input(MenuNav::MenuNavInput_e input) override;
 	void Input(char input) override{ buffer+=input; };
-	std::string buffer;
+
+	std::string GetCurrentText() {return buffer;}
+	void ClearText(){buffer.clear();};
+	void SetText(const std::string& text) {buffer = text;}
 
 private:
+	std::string buffer;
+	std::string& bufferRef;
 	bool firstPrint = true;
 
 };
