@@ -19,6 +19,10 @@ public:
 	void Render() override;
 	void Input(MenuNav::MenuNavInput_e input) override;
 	void Input(char input) override{ buffer+=input; };
+	void Cancel() override{
+		MenuItem::Cancel();
+		firstPrint = true;
+	}
 
 	std::string GetCurrentText() {return buffer;}
 	void ClearText(){buffer.clear();};

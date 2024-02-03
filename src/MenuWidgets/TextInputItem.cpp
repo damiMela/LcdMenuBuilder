@@ -9,6 +9,7 @@
 
 TextInputItem::TextInputItem(const std::string title, std::string& output):
 	MenuItem(title), bufferRef(output){
+	buffer = bufferRef;
 }
 
 TextInputItem::TextInputItem(const std::string title, std::function<void(TextInputItem*)> callback):

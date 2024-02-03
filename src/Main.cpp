@@ -67,10 +67,13 @@ bool captureKeys(MenuSystem& menu){
 void testTextHandler(TextInputItem* input){
 	std::cout << input->GetCurrentText() << std::endl;
 	sleep(1);
+	input->ClearText(); //clear buffer
+	input->Cancel();	//exit widget
 }
 
 void testRadioListHandler(RadioList* input){
-
+	std::cout << "selected option: " << (uint)input->GetCurrentSelection() << std::endl;
+		sleep(1);
 }
 
 ////////////////////////////////////////////////
@@ -89,7 +92,7 @@ int main() {
 
 	try {
 		///////// for textInput
-		std::string buffer;
+		std::string buffer = "hello world";
 
 		///////// for Chek Items
 		std::vector<bool> checkListReuslt(3);

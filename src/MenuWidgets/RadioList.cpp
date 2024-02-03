@@ -76,7 +76,9 @@ void RadioList::Input(MenuNav::MenuNavInput_e input){
 		break;
 	case MenuNav::ENTER_KEY:
 		activeItem = currSelection;
+		this->Render();
 		if(&activeItemRef != &activeItem)	activeItemRef = activeItem;
+		if(callback) this->Execute();
 		break;
 	}
 }

@@ -17,8 +17,10 @@ public:
 	virtual ~RadioList();
 
 	virtual void Render() override;
-	virtual void Execute() override {};
 	virtual void Input(MenuNav::MenuNavInput_e input) override;
+
+	uint8_t GetCurrentSelection() {return activeItem;}
+	std::string GetOptionTitile(uint8_t id) { return items[secureId(id)];}
 
 private:
 	int8_t printStartPoint = 0;
