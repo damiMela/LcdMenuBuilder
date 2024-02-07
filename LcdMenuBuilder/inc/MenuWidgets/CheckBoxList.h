@@ -10,26 +10,27 @@
 
 #include "MenuItem.h"
 #include <vector>
-#include <map>
+#include <memory>
 
-
-class CheckBoxList : public MenuItem{
+class CheckBoxList : public MenuItem
+{
 public:
-	CheckBoxList(const std::string title, std::vector<bool>& selectedItems, std::initializer_list<std::string> list);
+	CheckBoxList(const std::string title, std::vector<bool> &selectedItems, std::initializer_list<std::string> list);
 	virtual ~CheckBoxList();
 
 	void Render() override;
 	void Input(MenuNav::MenuNavInput_e input) override;
 	void Input(char input) override{};
+
 private:
 	std::vector<std::string> itemsText;
-	std::vector<bool> itemsState;
-	std::vector<bool>& itemsStateRef;
+	std::shared_ptr<std::vector<bool>> itemsState;
 	uint8_t currSelection = 0;
 	int8_t printStartPoint = 0;
 
-	constexpr uint8_t secureId(uint8_t id){
-		return ((int8_t)id < 0) ? 0 : ((id > itemsText.size()-1) ? (itemsText.size() -1) : id);
+	constexpr uint8_t secureId(uint8_t id)
+	{
+		return ((int8_t)id < 0) ? 0 : ((id > itemsText.size() - 1) ? (itemsText.size() - 1) : id);
 	}
 };
 
