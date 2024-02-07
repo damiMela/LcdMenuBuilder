@@ -50,11 +50,11 @@ To create a menu a MenuSystem object should be created and then started.
 
 ```c++
 MenuSystem m({new SubMenu("Sub Menu", {
-				new TextInputItem("Text input (handler)", testTextHandler),
-				new TextInputItem("Text input (shared)", buffer)}),
-			new CheckBoxList("check box", checkListReuslt, {
-                "option 1", "option 2", "option 3"
-            })
+        new TextInputItem("Text input (handler)", testTextHandler),
+        new TextInputItem("Text input (shared)", buffer)}),
+    new CheckBoxList("check box", checkListReuslt, {
+        "option 1", "option 2", "option 3"
+    })
 });
 
 m.start()
