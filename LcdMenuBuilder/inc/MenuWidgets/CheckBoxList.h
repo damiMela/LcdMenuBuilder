@@ -26,7 +26,6 @@ private:
 	std::vector<std::string> itemsText;
 	std::shared_ptr<std::vector<bool>> itemsState;
 	uint8_t currSelection = 0;
-	int8_t printStartPoint = 0;
 
 	constexpr uint8_t secureId(uint8_t id)
 	{

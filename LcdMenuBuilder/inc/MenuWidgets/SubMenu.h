@@ -12,15 +12,16 @@
 #include <vector>
 #include "MenuItem.h"
 
-class SubMenu : public MenuItem{
+class SubMenu : public MenuItem
+{
 public:
-	SubMenu(const std::string title, std::initializer_list<MenuItem*> list,
+	SubMenu(const std::string title, std::initializer_list<MenuItem *> list,
 			bool freeItemsOnDestroy = true);
 	virtual ~SubMenu();
 
 	inline size_t Size() { return items.size(); }
-	inline MenuItem* Item(menuId id) { return items[secureId(id)]; }
-	inline void SetSelection(menuId id) { currSelection=secureId(id); }
+	inline MenuItem *Item(menuId id) { return items[secureId(id)]; }
+	inline void SetSelection(menuId id) { currSelection = secureId(id); }
 	inline uint8_t GetSelection() { return currSelection; }
 
 	virtual void Render() override;
@@ -31,15 +32,14 @@ public:
 
 protected:
 	uint8_t currSelection = 0;
-	int8_t printStartPoint = 0;
-	std::vector<MenuItem*> items;
-	NavStack& navStack;
+	std::vector<MenuItem *> items;
+	NavStack &navStack;
 	bool freeItemsOnDestroy;
 
-	constexpr uint8_t secureId(uint8_t id){
-		return ((int8_t)id < 0) ? 0 : ((id > items.size()-1) ? (items.size() -1) : id);
+	constexpr uint8_t secureId(uint8_t id)
+	{
+		return ((int8_t)id < 0) ? 0 : ((id > items.size() - 1) ? (items.size() - 1) : id);
 	}
-
 };
 
 #endif /* SUBMENU_H_ */

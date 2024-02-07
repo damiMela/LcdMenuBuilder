@@ -26,7 +26,6 @@ public:
 	std::string GetOptionTitile(uint8_t id) { return items[secureId(id)]; }
 
 private:
-	int8_t printStartPoint = 0;
 	uint8_t currSelection = 0;
 
 	std::vector<std::string> items;

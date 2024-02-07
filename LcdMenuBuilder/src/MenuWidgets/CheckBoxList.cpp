@@ -29,6 +29,7 @@ CheckBoxList::~CheckBoxList()
 
 void CheckBoxList::Render(void)
 {
+	static int8_t printStartPoint = 0;
 	if (currSelection >= printStartPoint + MenuConfig::heigth)
 		printStartPoint++;
 
