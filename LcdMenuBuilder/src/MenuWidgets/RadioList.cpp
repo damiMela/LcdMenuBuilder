@@ -64,10 +64,10 @@ void RadioList::Input(MenuNav::MenuNavInput_e input)
 	switch (input)
 	{
 	case MenuNav::ARROW_UP:
-		currSelection = secureId(currSelection + 1);
+		currSelection = secureId(currSelection - 1);
 		break;
 	case MenuNav::ARROW_DOWN:
-		currSelection = secureId(currSelection - 1);
+		currSelection = secureId(currSelection + 1);
 		break;
 	case MenuNav::BACKSPACE_KEY:
 	case MenuNav::CANCEL_KEY:
