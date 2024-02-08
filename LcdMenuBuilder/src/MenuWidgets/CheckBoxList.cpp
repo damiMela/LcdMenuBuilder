@@ -5,7 +5,7 @@
  *      Author: damimela
  */
 
-#include <MenuWidgets/CheckBoxList.h>
+#include "MenuWidgets/CheckBoxList.h"
 #include <sstream>
 
 CheckBoxList::CheckBoxList(const std::string title, std::vector<bool> &selectedItems,

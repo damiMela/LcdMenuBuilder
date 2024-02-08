@@ -8,9 +8,9 @@
 #ifndef SUBMENU_H_
 #define SUBMENU_H_
 
+#include "MenuItem.h"
 #include <initializer_list>
 #include <vector>
-#include "MenuItem.h"
 
 class SubMenu : public MenuItem
 {
