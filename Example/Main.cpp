@@ -32,6 +32,7 @@ void print(uint8_t line, std::string text)
 	display[line] = text;
 	std::cout << "\033[2J"; // ANSI escape code to clear screen
 	std::cout << "\033[H";	// Move cursor to home position
+	std::cout << "--------------------" << std::endl;
 	for (const auto &s : display)
 		std::cout << s << std::endl;
 }
@@ -42,10 +43,10 @@ bool captureKeys(MenuSystem &menu)
 	switch (key)
 	{
 	case 65:
-		menu.Input(MenuNav::ARROW_DOWN);
+		menu.Input(MenuNav::ARROW_UP);
 		break;
 	case 66:
-		menu.Input(MenuNav::ARROW_UP);
+		menu.Input(MenuNav::ARROW_DOWN);
 		break;
 	case 67:
 		menu.Input(MenuNav::ARROW_RIGHT);
@@ -68,7 +69,8 @@ bool captureKeys(MenuSystem &menu)
 		return true;
 
 	default:
-		menu.Input(key);
+		if (std::isalnum(key) || std::isspace(key))
+			menu.Input(key);
 		break;
 	}
 #ifdef PRINT_KEY
