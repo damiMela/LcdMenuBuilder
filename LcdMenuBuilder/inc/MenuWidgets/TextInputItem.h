@@ -20,12 +20,8 @@ public:
 
 	void Render() override;
 	void Input(MenuNav::MenuNavInput_e input) override;
-	void Input(char input) override { buffer->push_back(input); };
-	void Cancel() override
-	{
-		MenuItem::Cancel();
-		firstPrint = true;
-	}
+	void Input(char input) override;
+	void Cancel() override;
 
 	std::string GetCurrentText() { return *buffer; }
 	void ClearText() { buffer->clear(); };
@@ -33,7 +29,10 @@ public:
 
 private:
 	std::shared_ptr<std::string> buffer, savedText;
+	int8_t cursorPos = 0;
 	bool firstPrint = true;
+
+	inline uint8_t displayTxtLen() { return MenuConfig::width - 2; }
 };
 
 #endif /* TEXTINPUTITEM_H_ */
