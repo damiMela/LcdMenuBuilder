@@ -9,18 +9,17 @@
 #define SUBMENU_H_
 
 #include "MenuItem.h"
-#include <initializer_list>
 #include <vector>
+#include <memory>
 
 class SubMenu : public MenuItem
 {
 public:
-	SubMenu(const std::string title, std::initializer_list<MenuItem *> list,
-			bool freeItemsOnDestroy = true);
+	SubMenu(const std::string title, std::vector<std::shared_ptr<MenuItem>> list);
 	virtual ~SubMenu();
 
 	inline size_t Size() { return items.size(); }
-	inline MenuItem *Item(menuId id) { return items[secureId(id)]; }
+	inline std::shared_ptr<MenuItem> Item(menuId id) { return items[secureId(id)]; }
 	inline void SetSelection(menuId id) { currSelection = secureId(id); }
 	inline uint8_t GetSelection() { return currSelection; }
 
@@ -32,9 +31,8 @@ public:
 
 protected:
 	uint8_t currSelection = 0;
-	std::vector<MenuItem *> items;
+	std::vector<std::shared_ptr<MenuItem>> items;
 	NavStack &navStack;
-	bool freeItemsOnDestroy;
 
 	constexpr uint8_t secureId(uint8_t id)
 	{

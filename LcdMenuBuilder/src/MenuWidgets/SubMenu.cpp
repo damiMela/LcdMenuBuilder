@@ -8,23 +8,14 @@
 #include "MenuWidgets/SubMenu.h"
 #include "MenuConfig.h"
 
-SubMenu::SubMenu(const std::string title, std::initializer_list<MenuItem *> list,
-				 bool freeItemsOnDestroy) : MenuItem(title),
-											items(list),
-											navStack(MenuItem::navStack),
-											freeItemsOnDestroy(freeItemsOnDestroy)
+SubMenu::SubMenu(const std::string title, std::vector<std::shared_ptr<MenuItem>> list) : MenuItem(title),
+																						 navStack(MenuItem::navStack),
+																						 items(list)
 {
 }
 
 SubMenu::~SubMenu()
 {
-	if (freeItemsOnDestroy)
-	{
-		for (const auto &item : items)
-		{
-			delete item;
-		}
-	}
 	items.clear();
 }
 
@@ -61,7 +52,7 @@ void SubMenu::Execute()
 
 void SubMenu::Cancel()
 {
-	if (navStack.size() > 1)
+	if (navStack.size())
 		navStack.pop_back();
 }
 
@@ -78,11 +69,15 @@ void SubMenu::Input(MenuNav::MenuNavInput_e input)
 	case MenuNav::BACKSPACE_KEY:
 	case MenuNav::CANCEL_KEY:
 	case MenuNav::ARROW_LEFT:
-		navStack.back()->Cancel();
+		if (navStack.size())
+			navStack.back()->Cancel();
 		break;
 	case MenuNav::ENTER_KEY:
 	case MenuNav::ARROW_RIGHT:
-		navStack.back()->Execute();
+		if (navStack.size())
+			navStack.back()->Execute();
+		else
+			SubMenu::Execute();
 		break;
 	}
 }
