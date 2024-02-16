@@ -15,7 +15,7 @@
 class CheckBoxList : public MenuItem
 {
 public:
-	CheckBoxList(const std::string title, std::vector<bool> &selectedItems, std::initializer_list<std::string> list);
+	CheckBoxList(const std::string title, std::vector<bool> &selectedItems, std::vector<std::string> list);
 	virtual ~CheckBoxList();
 
 	void Render() override;
@@ -24,7 +24,8 @@ public:
 
 private:
 	std::vector<std::string> itemsText;
-	std::shared_ptr<std::vector<bool>> itemsState;
+	std::vector<bool> *itemsStateFeedback;
+	std::vector<bool> itemsState;
 	uint8_t currSelection = 0;
 
 	constexpr uint8_t secureId(uint8_t id)

@@ -9,22 +9,22 @@
 #include <sstream>
 
 CheckBoxList::CheckBoxList(const std::string title, std::vector<bool> &selectedItems,
-						   std::initializer_list<std::string> list) : MenuItem(title),
-																	  itemsText(list)
+						   std::vector<std::string> list) : MenuItem(title),
+															itemsText(list)
 {
 	if (selectedItems.size() == itemsText.size())
 	{
-		itemsState = std::shared_ptr<std::vector<bool>>(&selectedItems);
+		itemsStateFeedback = &selectedItems;
+		itemsState = std::vector<bool>(selectedItems);
 		return;
 	}
 
 	for (size_t i = 0; i < itemsText.size(); i++)
-		itemsState->push_back(false);
+		itemsState.push_back(false);
 }
 
 CheckBoxList::~CheckBoxList()
 {
-	// TODO Auto-generated destructor stub
 }
 
 void CheckBoxList::Render(void)
@@ -49,13 +49,13 @@ void CheckBoxList::Render(void)
 		else if (i + printStartPoint == currSelection)
 		{
 			std::stringstream os;
-			os << "[" << (itemsState->at(i + printStartPoint) ? "X" : " ") << "] > " + itemsText[i + printStartPoint];
+			os << "[" << (itemsState.at(i + printStartPoint) ? "X" : " ") << "] > " + itemsText[i + printStartPoint];
 			MenuConfig::print(i, os.str());
 		}
 		else
 		{
 			std::stringstream os;
-			os << "[" << (itemsState->at(i + printStartPoint) ? "X" : " ") << "] " + itemsText[i + printStartPoint];
+			os << "[" << (itemsState.at(i + printStartPoint) ? "X" : " ") << "] " + itemsText[i + printStartPoint];
 			MenuConfig::print(i, os.str());
 		}
 	}
@@ -77,7 +77,8 @@ void CheckBoxList::Input(MenuNav::MenuNavInput_e input)
 		navStack.back()->Cancel();
 		break;
 	case MenuNav::ENTER_KEY:
-		itemsState->at(currSelection) = !itemsState->at(currSelection);
+		itemsState.at(currSelection) = !itemsState.at(currSelection);
+		itemsStateFeedback->at(currSelection) = itemsState.at(currSelection);
 		break;
 	}
 }
