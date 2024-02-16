@@ -15,7 +15,7 @@
 class MenuSystem : public SubMenu
 {
 public:
-	MenuSystem(std::initializer_list<MenuItem *> list, bool freeItemsOnDestroy = true);
+	MenuSystem(std::vector<std::shared_ptr<MenuItem>> list);
 	virtual ~MenuSystem();
 
 	bool Start(uint8_t width = 20, uint8_t heigth = 4);

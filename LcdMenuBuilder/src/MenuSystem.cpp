@@ -16,11 +16,9 @@
 
 bool MenuSystem::started = false;
 
-MenuSystem::MenuSystem(std::initializer_list<MenuItem *> list, bool freeItemsOnDestroy) : SubMenu("main menu", list, freeItemsOnDestroy)
+MenuSystem::MenuSystem(std::vector<std::shared_ptr<MenuItem>> list) : SubMenu("main menu", list)
 {
-
 	currMenuId = MAIN_MENU_ID;
-	navStack.push_back(this);
 }
 
 MenuSystem::~MenuSystem()
@@ -35,25 +33,32 @@ bool MenuSystem::Start(
 	MenuConfig::heigth = heigth;
 	MenuSystem::started = true;
 
-	Render();
+	SubMenu::Render();
 	return true;
 }
 
 void MenuSystem::Input(MenuNav::MenuNavInput_e input)
 {
-	if (navStack.size() == 1)
-		SubMenu::Input(input);
-	else
+	if (navStack.size() > 0)
 		navStack.back()->Input(input);
+	else
+		SubMenu::Input(input);
 
-	navStack.back()->Render();
+	if (navStack.size() > 0)
+		navStack.back()->Render();
+	else
+		SubMenu::Render();
 }
 
 void MenuSystem::Input(char input)
 {
-	if (navStack.size() == 1)
-		SubMenu::Input(input);
-	else
+	if (navStack.size() > 0)
 		navStack.back()->Input(input);
-	navStack.back()->Render();
+	else
+		SubMenu::Input(input);
+
+	if (navStack.size() > 0)
+		navStack.back()->Render();
+	else
+		SubMenu::Render();
 }
