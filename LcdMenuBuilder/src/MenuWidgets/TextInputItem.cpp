@@ -9,15 +9,15 @@
 
 TextInputItem::TextInputItem(const std::string title, std::string &output) : MenuItem(title)
 {
-	buffer = std::shared_ptr<std::string>(&output);
-	savedText = std::make_shared<std::string>(output);
+	buffer = std::string(output);
+	savedText = &output;
 }
 
 TextInputItem::TextInputItem(const std::string title,
 							 std::function<void(TextInputItem *)> callback) : MenuItem(title),
 																			  savedText(nullptr)
 {
-	buffer = std::make_shared<std::string>("");
+	buffer = std::string("");
 	this->SetCallback([callback](MenuItem *item)
 					  { callback(static_cast<TextInputItem *>(item)); });
 }
@@ -34,28 +34,28 @@ void TextInputItem::Input(MenuNav::MenuNavInput_e input)
 		navStack.back()->Cancel();
 		break;
 	case MenuNav::BACKSPACE_KEY:
-		if (buffer->size())
-			buffer->pop_back();
+		if (buffer.size())
+			buffer.pop_back();
 		if (cursorPos)
 			cursorPos--;
 		break;
 	case MenuNav::ENTER_KEY:
 		if (savedText)
-			*savedText = *buffer;
+			*savedText = buffer;
 		if (this->callback)
 			this->Execute();
 		break;
 
 	case MenuNav::ARROW_RIGHT:
-		if (buffer->size() < MenuConfig::width)
+		if (buffer.size() < MenuConfig::width)
 			break;
-		if (cursorPos > (displayTxtLen() - buffer->size()))
+		if (cursorPos > (displayTxtLen() - buffer.size()))
 			break;
 		cursorPos++;
 		break;
 
 	case MenuNav::ARROW_LEFT:
-		if (buffer->size() < MenuConfig::width)
+		if (buffer.size() < MenuConfig::width)
 			break;
 		if (cursorPos < 1)
 			break;
@@ -66,32 +66,32 @@ void TextInputItem::Input(MenuNav::MenuNavInput_e input)
 
 void TextInputItem::Input(char input)
 {
-	buffer->push_back(input);
-	if (buffer->size() <= displayTxtLen())
+	buffer.push_back(input);
+	if (buffer.size() <= displayTxtLen())
 		return;
 	cursorPos++;
 }
 
 void TextInputItem::Cancel()
 {
-	MenuItem::Cancel();
 	firstPrint = true;
 	if (savedText)
 	{
-		*buffer = *savedText;
+		buffer = *savedText;
 		cursorPos = (savedText->size() > displayTxtLen())
 						? savedText->size() - displayTxtLen()
 						: 0;
 	}
+	MenuItem::Cancel();
 }
 
 void TextInputItem::Render()
 {
 	MenuConfig::print(0, this->GetTitle());
-	if (buffer->size() <= displayTxtLen())
-		MenuConfig::print(1, "::" + *buffer);
+	if (buffer.size() <= displayTxtLen())
+		MenuConfig::print(1, "::" + buffer);
 	else
-		MenuConfig::print(1, "::" + buffer->substr(cursorPos, displayTxtLen()));
+		MenuConfig::print(1, "::" + buffer.substr(cursorPos, displayTxtLen()));
 
 	if (firstPrint)
 	{
@@ -100,3 +100,16 @@ void TextInputItem::Render()
 		MenuConfig::print(3, "");
 	}
 };
+
+void TextInputItem::ClearText()
+{
+	buffer.clear();
+	if (savedText)
+		savedText->clear();
+};
+void TextInputItem::SetText(const std::string &text)
+{
+	buffer = text;
+	if (savedText)
+		*savedText = text;
+}

@@ -23,12 +23,13 @@ public:
 	void Input(char input) override;
 	void Cancel() override;
 
-	std::string GetCurrentText() { return *buffer; }
-	void ClearText() { buffer->clear(); };
-	void SetText(const std::string &text) { *buffer = text; }
+	std::string GetCurrentText() { return buffer; }
+	void ClearText();
+	void SetText(const std::string &text);
 
 private:
-	std::shared_ptr<std::string> buffer, savedText;
+	std::string *savedText = nullptr;
+	std::string buffer;
 	int8_t cursorPos = 0;
 	bool firstPrint = true;
 
