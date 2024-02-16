@@ -49,12 +49,16 @@ Besides the "SubMenu" item, each of the above mentioned widgets lets you specify
 To create a menu a MenuSystem object should be created and then started.
 
 ```c++
-MenuSystem m({new SubMenu("Sub Menu", {
-        new TextInputItem("Text input (handler)", testTextHandler),
-        new TextInputItem("Text input (shared)", buffer)}),
-    new CheckBoxList("check box", checkListReuslt, {
-        "option 1", "option 2", "option 3"
-    })
+std::vector<std::string> options = {"option 1", "option 2", "option 3"};
+
+std::vector<std::shared_ptr<MenuItem>> subMenu{
+    std::make_shared<TextInputItem>("Text input (handler)", testTextHandler),
+    std::make_shared<TextInputItem>("Text input (shared)", buffer)
+};
+
+MenuSystem m({
+    std::make_shared<SubMenu>("Sub Menu", subMenu),
+    std::make_shared<CheckBoxList>("check box", checkListReuslt, options)
 });
 
 m.start()
@@ -111,7 +115,6 @@ public:
             currSelection++;
         else
             currSelection--;
-        this->Render();
     };
 
     void Input(char input) override{};
@@ -123,12 +126,9 @@ private:
 
 ## TODO:
 
+- auto rolling text
+- Add InlineRender for subMenu rendering
 - add numericUpDown
 - add horizontal selection
 - add method/ctor parameter to pass "not allowed chars" list in TextInput
 - limit text width
-
-evaluate:
-
-- auto rolling text
-- move cursor in textInput
