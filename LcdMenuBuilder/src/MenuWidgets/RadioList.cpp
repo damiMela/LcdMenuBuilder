@@ -8,14 +8,13 @@
 #include "MenuWidgets/RadioList.h"
 #include <sstream>
 
-RadioList::RadioList(const std::string title, uint8_t &selectedId, std::initializer_list<std::string> list) : MenuItem(title), items(list)
+RadioList::RadioList(const std::string title, uint8_t &selectedId, std::vector<std::string> list) : MenuItem(title), items(list)
 {
-	activeItem = std::shared_ptr<uint8_t>(&selectedId);
+	activeItemFeedback = &selectedId;
 }
 
-RadioList::RadioList(const std::string title, std::function<void(RadioList *)> callback, std::initializer_list<std::string> list) : MenuItem(title), items(list)
+RadioList::RadioList(const std::string title, std::function<void(RadioList *)> callback, std::vector<std::string> list) : MenuItem(title), items(list)
 {
-	activeItem = std::make_shared<uint8_t>(0);
 	this->SetCallback([callback](MenuItem *item)
 					  { callback(static_cast<RadioList *>(item)); });
 }
@@ -47,13 +46,13 @@ void RadioList::Render(void)
 		else if (i + printStartPoint == currSelection)
 		{
 			std::stringstream os;
-			os << "(" << (i + printStartPoint == *activeItem ? "X" : " ") << ") > " + items[i + printStartPoint];
+			os << "(" << (i + printStartPoint == activeItem ? "X" : " ") << ") > " + items[i + printStartPoint];
 			MenuConfig::print(i, os.str());
 		}
 		else
 		{
 			std::stringstream os;
-			os << "(" << (i + printStartPoint == *activeItem ? "X" : " ") << ") " + items[i + printStartPoint];
+			os << "(" << (i + printStartPoint == activeItem ? "X" : " ") << ") " + items[i + printStartPoint];
 			MenuConfig::print(i, os.str());
 		}
 	}
@@ -76,7 +75,9 @@ void RadioList::Input(MenuNav::MenuNavInput_e input)
 		navStack.back()->Cancel();
 		break;
 	case MenuNav::ENTER_KEY:
-		*activeItem = currSelection;
+		activeItem = currSelection;
+		if (activeItemFeedback)
+			*activeItemFeedback = activeItem;
 		this->Render();
 		if (callback)
 			this->Execute();
