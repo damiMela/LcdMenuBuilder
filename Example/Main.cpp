@@ -61,7 +61,7 @@ bool captureKeys(MenuSystem &menu)
 		menu.Input(MenuNav::ENTER_KEY);
 		break;
 	case 51:
-		if (MenuItem::NavStackSize() > 1)
+		if (MenuItem::NavStackSize() > 0)
 		{
 			menu.Input(MenuNav::CANCEL_KEY);
 			return false;
@@ -117,26 +117,35 @@ int main()
 		std::string buffer = "hello world";
 
 		///////// for Chek Items
+		std::vector<std::string> CheckBoxOptions = {"option A", "option B", "option C"};
 		std::vector<bool> checkListReuslt(3);
 
 		///////// for radio list
+		std::vector<std::string> RadioOptions = {"option 1", "option 2", "option 3"};
 		uint8_t selectedId = 0;
 
-		///////// same item, multiple access points
-		auto radioListItem = new RadioList("other radio list", testRadioListHandler, {"option A", "option B", "option C"});
+		///////// Shared item
+		std::vector<std::string> SharedRadioOptions = {"Shared", "item", "test"};
+		uint8_t SharedSelectedId = 0;
+		auto sharedItem = std::make_shared<RadioList>("Shared radio list", SharedSelectedId, SharedRadioOptions);
 
-		//---------------------- example -------------------//
+		///////// Sub menus
+		std::vector<std::shared_ptr<MenuItem>> subSubMenu{
+			std::make_shared<MenuItem>("Void item 3"),
+			sharedItem};
+
+		std::vector<std::shared_ptr<MenuItem>> subMenu{
+			std::make_shared<MenuItem>("Void item 2"),
+			sharedItem,
+			std::make_shared<SubMenu>("Sub-SubMenu", subSubMenu)};
 
 		MenuSystem::SetPrintCallback(print);
-		MenuSystem m({new MenuItem("Void item"),
-					  new SubMenu("Sub Menu", {new MenuItem("void item 2"),
-											   new SubMenu("Sub-SubMenu", {new MenuItem("void item 3")})}),
-					  new TextInputItem("Text input (handler)", testTextHandler),
-					  new TextInputItem("Text input (shared)", buffer),
-					  new CheckBoxList("check box", checkListReuslt, {"option 1", "option 2", "option 3"}),
-					  new RadioList("radio list", selectedId, {"option 1", "option 2", "option 3"}),
-					  new SubMenu("double access A", {radioListItem}),
-					  new SubMenu("double access B", {radioListItem})});
+		MenuSystem m({std::make_shared<MenuItem>("Void item"),
+					  std::make_shared<TextInputItem>("Text input (handler)", testTextHandler),
+					  std::make_shared<TextInputItem>("Text input (shared)", buffer),
+					  std::make_shared<CheckBoxList>("check box", checkListReuslt, CheckBoxOptions),
+					  std::make_shared<RadioList>("radio list", selectedId, RadioOptions),
+					  std::make_shared<SubMenu>("Sub Menu", subMenu)});
 
 		m.Start();
 		while (!captureKeys(m))
